@@ -2,5 +2,6 @@
 *.jar
 *.war
 *.ear
+temp/
 target/
 
