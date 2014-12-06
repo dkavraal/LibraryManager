@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Spring4 MVC -HelloWorld</title>
+<title>Library Manger</title>
 </head>
 <body>
-	<h1>Hello: ${name}</h1>
+	<h1>${key} ${value}</h1>
 </body>
 </html>
