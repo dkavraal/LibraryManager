@@ -8,5 +8,9 @@
 </head>
 <body>
 	<h1>${key} ${value}</h1>
+	<img src="jcaptcha.jpg" /> <input type="text" name="jcaptcha" value="" />
+	<br/><br/><br/><br/><br/>
+	<hr>
+	Library Manager
 </body>
 </html>

@@ -1,0 +1,1 @@
+https://jcaptcha.atlassian.net/wiki/display/general/Simple+Servlet+Integration+documentation   #maven repos problem

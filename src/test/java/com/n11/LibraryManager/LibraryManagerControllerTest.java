@@ -1,8 +1,6 @@
-package com.n11.tests;
+package com.n11.LibraryManager;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
@@ -23,14 +21,27 @@ import org.springframework.web.context.WebApplicationContext;
 public class LibraryManagerControllerTest {
 	@Autowired
 	private WebApplicationContext wac;
-
 	private MockMvc mockMvc;
+	private LibraryManagerController libman;
 
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		this.libman = new LibraryManagerController();
 	}
-
+	
+	@Test
+	public void web_application_version_service_should_return_ok() throws Exception {
+		// a primitive service for also test purposes - DK
+		this.mockMvc.perform(get("/version").accept(MediaType.TEXT_HTML)).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void should_record_book_item_into_db() throws Exception {
+		System.out.println(libman.tryThis());
+	}
+	
+	/*
 	@Test
 	public void testSearchProduct() throws Exception {
 		String keyword = "Very Nice Shoes";
@@ -39,5 +50,5 @@ public class LibraryManagerControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.name").value(keyword));
-	}
+	}*/
 }

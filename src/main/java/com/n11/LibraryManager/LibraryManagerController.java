@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LibraryManagerController {
-	protected static Logger logger = Logger.getLogger(LibraryManagerController.class.toString());
+	protected static Logger logger = Logger.getLogger(LibraryManagerController.class.getName());
 	static {
 		logger.info(String.format("Library Manager %s", version()));
 	}
@@ -30,6 +30,10 @@ public class LibraryManagerController {
 		model.addAttribute("key", "version");
 		model.addAttribute("value", version());
 		return "index";
+	}
+	
+	protected String tryThis() {
+		return "OK_ME";
 	}
 	
 	public static String version() {
