@@ -42,10 +42,12 @@
 						<span ng-hide="loading"><span class="glyphicon glyphicon-plus"></span> Add</span>
 						<span ng-show="loading">Posting...</span>
 					</button>
-					<div id="message_s_cont" class="alert alert-success" data-ng-show="message_success" data-ng-bind="message_success"></div>
-					<div id="message_d_cont" class="alert alert-danger"  data-ng-show="message_danger" data-ng-bind="message_danger"></div>
 				</div>
 			</form>
+			<div class="col-md-offset-1 col-md-10">
+				<div id="message_s_cont" class="alert alert-success text-center" ng-show="show_message_success" data-ng-show="message_success" data-ng-bind="message_success"></div>
+				<div id="message_d_cont" class="alert alert-danger text-center" ng-show="show_message_danger" data-ng-show="message_danger" data-ng-bind="message_danger"></div>
+			</div>
 		</div>
 	</div>
 	
@@ -84,7 +86,7 @@
 		</div>
 	</footer>
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular.min.js"></script>
 	<script type="text/javascript">
 		var app = angular.module("LibMan", []);
 
@@ -104,9 +106,33 @@
 		});
 		
 		app.controller("LibManAdd", function($scope, $http) {
+			$scope.showSuccessMessage = function(message, timeout_value) {
+				if (timeout_value === undefined) timeout_value = 3000;
+				
+				try { clearTimeout($scope.success_dialog_timeout); } catch (e) {}
+				$scope.message_success = message;
+				$scope.show_message_success = true;
+				$scope.success_dialog_timeout = setTimeout(function() {
+					$scope.message_success = null;
+					$scope.show_message_success = false;
+				}, timeout_value);
+			}
+			
+			$scope.showDangerMessage = function(message, timeout_value) {
+				if (timeout_value === undefined) timeout_value = 3000;
+				
+				try { clearTimeout($scope.danger_dialog_timeout); } catch (e) {}
+				$scope.message_danger = message;
+				$scope.show_message_danger = true;
+				$scope.danger_dialog_timeout = setTimeout(function() {
+					$scope.message_danger = null;
+					$scope.show_message_danger = false;
+				}, timeout_value);
+			}
+			
 			$scope.refreshCaptcha = function() {
+				$scope.captcha_image = '#';
 				$scope.captcha_image = '${pageContext.servletContext.contextPath}/captcha.jpg?' + new Date().getTime();;
-				try { $scope.$apply(); } catch(e) {}
 			};
 			
 			$scope.submitNewBook = function() {
@@ -118,38 +144,25 @@
 				       };
 				
 				$http({
-					headers : { 'Content-Type': 'application/json; charset=utf-8' }, //application/x-www-form-urlencoded
+					headers : { 'Content-Type': 'application/json; charset=utf-8' },
 			        url     : '${pageContext.servletContext.contextPath}/addNewBook',
 					data    : dataToSend,
 					method  : 'POST',
 			    }).success(function(data) {
-		            if (!data['RESP_CODE'] == 'OK') {
-		            	//$scope.errorName = data.errors.name;
-		                //$scope.errorSuperhero = data.errors.superheroAlias;
-		                $scope.message_success = 'Added.';
+		            if (data['RESP_CODE'] == 'OK') {
 		                $scope.title = null;
 		                $scope.author = null;
 		                $scope.verify = null;
-		                $scope.$setPristine();
-		                refreshCaptcha();
+		                $scope.refreshCaptcha();
+		                $scope.showSuccessMessage('Great. Done.');
 		            } else {
-		            	console.log(data['RESP_CODE']);
-		            	$scope.message_danger = 'There was a problem.';
+		            	$scope.showDangerMessage('There has been a problem. CODE:' + data['RESP_CODE']);
 		            }
+		        }).error(function(data, status, headers, config) {
+		        	$scope.showDangerMessage('There was a problem.');
 		        }).finally(function() {
-		        	//$scope.loading = false;
-		        	try {
-			        	$timeout.cancel(scope.success_dialog_timeout);
-			        	$timeout.cancel(scope.danger_dialog_timeout);
-		        	} catch (e) {}
-		        	
-		        	$scope.success_dialog_timeout = $timeout(function() {
-		        		$scope.message_success = null;
-		        	}, 3000);
-		        	$scope.danger_dialog_timeout = $timeout(function() {
-		        		$scope.message_danger = null;
-		        	}, 3000);
-		        });
+		        	$scope.loading = false;
+		        })
 			};
 		});
 		
