@@ -1,9 +1,9 @@
 package com.n11.LibraryManager;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.Charset;
 
@@ -18,6 +18,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
+import com.n11.LibraryManager.data.MongoConfigurator;
+import com.n11.LibraryManager.model.Book;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -66,6 +73,26 @@ public class LibraryManagerControllerTest {
 					.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 					.andExpect(jsonPath("$.R[0].bookList").isArray())
 					.andExpect(jsonPath("$.R[0].bookList[0].title").exists());
+	}
+	
+	@Test
+	public void add_new_book_should_record_the_book() throws Exception {
+		// this is the actual method tested that should record into db
+		Book insertedBook = libman.recordNewBook(new Book("YYYY", "TTTT"));
+		
+		insertedBook.getId();
+		
+		Mongo mongo = PowerMockito.mock(Mongo.class);
+		DB db = PowerMockito.mock(DB.class);
+		DBCollection dbCollection = PowerMockito.mock(DBCollection.class);
+
+		PowerMockito.when(mongo.getDB("foo")).thenReturn(db);
+		PowerMockito.when(db.getCollection("bar")).thenReturn(dbCollection);
+
+		MyService svc = new MyService(mongo); // Use some kind of dependency injection
+		svc.getObjectById(1);
+		
+		PowerMockito.verify(dbCollection).findOne(new BasicDBObject("_id", 1));
 	}
 	
 	

@@ -86,9 +86,11 @@
 		</div>
 	</footer>
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-		var app = angular.module("LibMan", []);
+		var app = angular.module("LibMan", ['ui.bootstrap', 'dialogs']);
 
 		app.controller("LibManList", function($scope, $http) {
 			$http.get('${pageContext.servletContext.contextPath}/books').success(
@@ -98,10 +100,12 @@
 							$scope.bookList = data['R'][0]['bookList'];
 						} catch (e) {
 							//TODO server problem. db? tomcat? etc (see: data['RESP_CODE'])
+									//put a refresh button
 						}
 					}
 				}).error(function(data, status, headers, config) {
-					//TODO resp unavailable -- server down? user network down? timeout? 
+					//TODO resp unavailable -- server down? user network down? timeout?
+							//put a refresh button
 				});
 		});
 		

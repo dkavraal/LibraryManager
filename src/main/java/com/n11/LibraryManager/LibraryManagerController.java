@@ -100,6 +100,15 @@ public class LibraryManagerController {
 		}
 	}
 	
+	protected Book findABook(String id) {
+		try {
+			return repository.findOne(id);
+		} catch (Exception e) {
+			logger.error("Failed finding the book DB", e);
+			return null;
+		}
+	}
+	
 	protected Book recordNewBook(Book book) {
 		try {
 			return repository.save(book);
