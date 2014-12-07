@@ -1,9 +1,13 @@
 package com.n11.LibraryManager.model;
 
+import org.springframework.data.annotation.Id;
+
+
 public class Book {
-	private String uuid = "";
-	private String author = "";
-	private String title = "";
+	@Id
+	private String uuid;
+	private String author;
+	private String title;
 
 	public Book() { }
 	
@@ -11,13 +15,7 @@ public class Book {
 		this.author = author;
 		this.title = title;
 	}
-	
-	public Book(String id, String author, String title) {
-		this.author = author;
-		this.title = title;
-		this.uuid = id;
-	}
-	
+		
 	public String getAuthor() {
 		return author;
 	}
@@ -33,13 +31,14 @@ public class Book {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	
 	public String getId() {
-		return uuid;
+		return this.uuid;
 	}
 
-	public void setId(String uuid) {
-		this.uuid = uuid;
+	@Override
+	public String toString() {
+		return String.format("[%s] %s by %s", uuid, title, author);
 	}
 
 }

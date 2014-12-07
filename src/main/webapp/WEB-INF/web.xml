@@ -31,6 +31,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>jcaptcha</servlet-name>
-		<url-pattern>/jcaptcha.jpg</url-pattern>
+		<url-pattern>/captcha.jpg</url-pattern>
 	</servlet-mapping>
 </web-app>

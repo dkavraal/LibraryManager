@@ -47,9 +47,13 @@ public class LibraryManagerControllerTest {
 	}
 
 	@Test
-	public void new_book_item_info_should_be_recorded_into_db()
-			throws Exception {
-
+	public void new_book_item_info_should_be_recorded_into_db() throws Exception {
+		
+	}
+	
+	@Test
+	public void wrong_captcha_should_disallow_new_book_record() throws Exception {
+		
 	}
 
 	@Test

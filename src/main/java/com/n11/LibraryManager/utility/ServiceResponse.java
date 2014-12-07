@@ -6,7 +6,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class ServiceResponse {
 	public enum T_RESP_CODE {
-		OK, NOK, TIMEOUT, NOTAUTH, DBERROR, TEMPUNAVAIL
+		OK, NOK, TIMEOUT, NOTAUTH, DBERROR, TEMPUNAVAIL, INSECURE
 	}
 	
 	@JsonProperty("RESP_CODE")	private T_RESP_CODE RESP_CODE;
