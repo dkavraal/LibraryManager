@@ -11,13 +11,35 @@
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<spring.version>4.1.2.RELEASE</spring.version>
+		<java.servlet>3.1.0</java.servlet>
+		<spring.version>3.2.12.RELEASE</spring.version>
 		<junit.version>3.8.1</junit.version>
 		<log4j.version>1.2.17</log4j.version>
 		<mockito.version>1.9.5</mockito.version>
+		<jayway.jsonpath.version>0.9.0</jayway.jsonpath.version>
+		<hamcrest.version>1.3</hamcrest.version>
 	</properties>
 	<dependencies>
-		<!-- Logging // Apache log4j -->
+		<!-- jstl -->
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- jackson -->
+		<dependency>
+	        <groupId>org.codehaus.jackson</groupId>
+	        <artifactId>jackson-core-asl</artifactId>
+	        <version>1.9.13</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.codehaus.jackson</groupId>
+	        <artifactId>jackson-mapper-asl</artifactId>
+	        <version>1.9.13</version>
+	    </dependency>
+	    
+	    <!-- Logging // Apache log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -42,6 +64,18 @@
 			<scope>test</scope>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.jayway.jsonpath</groupId>
+		    <artifactId>json-path</artifactId>
+		    <version>${jayway.jsonpath.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.hamcrest</groupId>
+		    <artifactId>hamcrest-library</artifactId>
+		    <version>${hamcrest.version}</version>
+		    <scope>test</scope>
+		</dependency>
 
 		<!-- Control // Spring Core+web+MVC -->
 		<dependency>
@@ -59,6 +93,12 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <version>${java.servlet}</version>
+		</dependency>
+		
 		<!-- Utility // Apache commons + etc -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
