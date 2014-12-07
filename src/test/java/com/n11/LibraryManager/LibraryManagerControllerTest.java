@@ -55,6 +55,8 @@ public class LibraryManagerControllerTest {
 	@Test
 	public void get_books_should_return_list() throws Exception {
 		//json response bookListResultShouldContain  "bookList"; 
+		//   and a book with a title
+		//   !! be sure there is already a book in db
 		this.mockMvc.perform(get("/books").accept(APPLICATION_JSON_UTF8))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(APPLICATION_JSON_UTF8))

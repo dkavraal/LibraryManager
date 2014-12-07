@@ -12,6 +12,12 @@ public class Book {
 		this.title = title;
 	}
 	
+	public Book(String id, String author, String title) {
+		this.author = author;
+		this.title = title;
+		this.uuid = id;
+	}
+	
 	public String getAuthor() {
 		return author;
 	}

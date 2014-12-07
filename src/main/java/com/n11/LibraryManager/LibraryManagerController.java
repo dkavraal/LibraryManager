@@ -48,8 +48,8 @@ public class LibraryManagerController {
 		
 		BookList bookList = new BookList();
 		ArrayList<Book> incomingBooks = new ArrayList<Book>();
-		Book b1 = new Book("acar baltas", "hep boyle anlatın");
-		Book b2 = new Book("canavar necmi", "cok guzel top oynarım");
+		Book b1 = new Book("2133-1231231-13121", "acar baltas", "hep boyle anlatın");
+		Book b2 = new Book("a343-12bbbv31-3121", "canavar necmi", "cok guzel top oynarım");
 		incomingBooks.add(b1);
 		incomingBooks.add(b2);
 		try {
