@@ -1,4 +1,4 @@
-package com.n11.LibraryManager.utility;
+package com.n11.LibraryManager.service;
 
 import java.util.List;
 

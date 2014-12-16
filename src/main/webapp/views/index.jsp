@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Library Manger</title>
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-	<style>
-		.footer { position: fixed; bottom: 0; width: 100%; height: 17px; background-color: #f5f5f5; }
-	</style>
+	<link href="<c:url value="/weblib/css/bootstrap.min.css" />"  rel="stylesheet" />
+	<link href="<c:url value="/weblib/css/libman.css" />"  rel="stylesheet" />
+	<script type="text/javascript">var APPPATH="${pageContext.servletContext.contextPath}";</script>
 </head>
 <body ng-app="LibMan">
 	<div class="container">
@@ -32,8 +32,8 @@
 				</div>
 				
 				<div class="col-md-4">
-					<img src="" ng-model="captcha" ng-src="{{captcha_image}}" data-ng-init="refreshCaptcha()" class="pull-left" title="Click to change for another" alttext="Security Code Captcha Image" ng-click="refreshCaptcha()" style="cursor:pointer; width: 200px; height: 70px; border:1px solid #CCD0E8; border-radius:4px;" />
-					<input type="text" class="form-control" id="newbook-captcha" placeholder="Code" size="5" style="width: 85px;" ng-model="verify" required/>
+					<img id="captchaImg" src="" ng-model="captcha" ng-src="{{captcha_image}}" data-ng-init="refreshCaptcha()" class="pull-left" title="Click to change for another" alttext="Security Code Captcha Image" ng-click="refreshCaptcha()" />
+					<input type="text" class="form-control" id="newbook-captcha-input" placeholder="Code" size="5" ng-model="verify" required />
 					<small>To change, click the image</small> 
 				</div>
 				
@@ -86,91 +86,11 @@
 		</div>
 	</footer>
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-	<script type="text/javascript">
-		var app = angular.module("LibMan", ['ui.bootstrap', 'dialogs']);
-
-		app.controller("LibManList", function($scope, $http) {
-			$http.get('${pageContext.servletContext.contextPath}/books').success(
-				function(data, status, headers, config) {
-					if (data['RESP_CODE'] == 'OK') {
-						try {
-							$scope.bookList = data['R'][0]['bookList'];
-						} catch (e) {
-							//TODO server problem. db? tomcat? etc (see: data['RESP_CODE'])
-									//put a refresh button
-						}
-					}
-				}).error(function(data, status, headers, config) {
-					//TODO resp unavailable -- server down? user network down? timeout?
-							//put a refresh button
-				});
-		});
-		
-		app.controller("LibManAdd", function($scope, $http) {
-			$scope.showSuccessMessage = function(message, timeout_value) {
-				if (timeout_value === undefined) timeout_value = 3000;
-				
-				try { clearTimeout($scope.success_dialog_timeout); } catch (e) {}
-				$scope.message_success = message;
-				$scope.show_message_success = true;
-				$scope.success_dialog_timeout = setTimeout(function() {
-					$scope.message_success = null;
-					$scope.show_message_success = false;
-				}, timeout_value);
-			}
-			
-			$scope.showDangerMessage = function(message, timeout_value) {
-				if (timeout_value === undefined) timeout_value = 3000;
-				
-				try { clearTimeout($scope.danger_dialog_timeout); } catch (e) {}
-				$scope.message_danger = message;
-				$scope.show_message_danger = true;
-				$scope.danger_dialog_timeout = setTimeout(function() {
-					$scope.message_danger = null;
-					$scope.show_message_danger = false;
-				}, timeout_value);
-			}
-			
-			$scope.refreshCaptcha = function() {
-				$scope.captcha_image = '#';
-				$scope.captcha_image = '${pageContext.servletContext.contextPath}/captcha.jpg?' + new Date().getTime();;
-			};
-			
-			$scope.submitNewBook = function() {
-				$scope.loading = true;
-				var dataToSend = {
-				          title:  $scope.title,
-				          author: $scope.author,
-				          verify: $scope.verify,
-				       };
-				
-				$http({
-					headers : { 'Content-Type': 'application/json; charset=utf-8' },
-			        url     : '${pageContext.servletContext.contextPath}/addNewBook',
-					data    : dataToSend,
-					method  : 'POST',
-			    }).success(function(data) {
-		            if (data['RESP_CODE'] == 'OK') {
-		                $scope.title = null;
-		                $scope.author = null;
-		                $scope.verify = null;
-		                $scope.refreshCaptcha();
-		                $scope.showSuccessMessage('Great. Done.');
-		            } else {
-		            	$scope.showDangerMessage('There has been a problem. CODE:' + data['RESP_CODE']);
-		            }
-		        }).error(function(data, status, headers, config) {
-		        	$scope.showDangerMessage('There was a problem.');
-		        }).finally(function() {
-		        	$scope.loading = false;
-		        })
-			};
-		});
-		
-		
-	</script>
+	<script src="<c:url value="/weblib/js/angular.min.js"/>"></script>
+	<script src="<c:url value="/weblib/js/jquery.min.js"/>"></script>
+	<script src="<c:url value="/weblib/js/bootstrap.min.js"/>"></script>
+	<script src="<c:url value="/weblib/js/ui-bootstrap-tpls.js"/>"></script>
+	<script src="<c:url value="/weblib/js/dialogs.min.js"/>"></script>
+	<script src="<c:url value="/weblib/js/libman.js"/>"></script>
 </body>
 </html>

@@ -10,7 +10,6 @@ http://www.springframework.org/schema/mvc
 http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
 	<context:component-scan base-package="com.n11.LibraryManager" />
-	<context:component-scan base-package="com.n11.LibraryManager.data" />
 	<context:property-placeholder location="classpath:mongodb.properties"/>
 	
 	<bean

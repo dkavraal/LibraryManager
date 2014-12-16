@@ -14,18 +14,13 @@ http://www.springframework.org/schema/data/mongo
 http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
 	<context:component-scan base-package="com.n11.LibraryManager" />
-	<context:component-scan base-package="com.n11.LibraryManager.data" />
 	<context:property-placeholder location="classpath:mongodb.properties"/>
 	
+	<mvc:resources mapping="/weblib/**" location="/weblib/" />
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix">
-			<value>/views/</value>
-		</property>
-		<property name="suffix">
-			<value>.jsp</value>
-		</property>
+		<property name="prefix" value="/views/"></property>
+		<property name="suffix" value=".jsp"></property>
 	</bean>
-
 	<mvc:annotation-driven />
 
 	<!-- bean id="mongo" class="com.mongodb.MongoClient">

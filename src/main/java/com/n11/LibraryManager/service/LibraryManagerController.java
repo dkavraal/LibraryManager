@@ -1,4 +1,4 @@
-package com.n11.LibraryManager;
+package com.n11.LibraryManager.service;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,8 +16,8 @@ import com.n11.LibraryManager.data.IBookRepository;
 import com.n11.LibraryManager.model.Book;
 import com.n11.LibraryManager.model.BookList;
 import com.n11.LibraryManager.model.RequestNewBook;
-import com.n11.LibraryManager.utility.ServiceResponse;
-import com.n11.LibraryManager.utility.ServiceResponse.T_RESP_CODE;
+import com.n11.LibraryManager.service.ServiceResponse;
+import com.n11.LibraryManager.service.ServiceResponse.T_RESP_CODE;
 import com.octo.captcha.module.servlet.image.SimpleImageCaptchaServlet;
 
 @Controller
