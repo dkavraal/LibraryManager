@@ -5,9 +5,9 @@ import org.springframework.data.annotation.Id;
 
 public class Book {
 	@Id
-	private String uuid;
-	private String author;
-	private String title;
+	private String uuid = null;
+	private String author = null;
+	private String title = null;
 
 	public Book() { }
 	

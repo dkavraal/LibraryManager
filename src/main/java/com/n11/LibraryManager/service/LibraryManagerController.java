@@ -16,9 +16,7 @@ import com.n11.LibraryManager.data.IBookRepository;
 import com.n11.LibraryManager.model.Book;
 import com.n11.LibraryManager.model.BookList;
 import com.n11.LibraryManager.model.RequestNewBook;
-import com.n11.LibraryManager.service.ServiceResponse;
 import com.n11.LibraryManager.service.ServiceResponse.T_RESP_CODE;
-import com.octo.captcha.module.servlet.image.SimpleImageCaptchaServlet;
 
 @Controller
 public class LibraryManagerController {
@@ -29,7 +27,20 @@ public class LibraryManagerController {
 
 	@Autowired
 	private IBookRepository repository;
+	private AbstractCaptchaService captchaService;
+	
+	
+	public LibraryManagerController() {
+		captchaService = new CaptchaService();
+	}
 
+	/**
+	 * Simple hello (demo) service
+	 * 
+	 * @param name
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="/hello", method=RequestMethod.GET)
 	public String sayHello(
 			@RequestParam(value = "name", required = false, defaultValue = "World") String name,
@@ -42,6 +53,12 @@ public class LibraryManagerController {
 		return "hello";
 	}
 	
+	/**
+	 * Gives the package version
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="/version", method=RequestMethod.GET)
 	public String getVersion(Model model) {
 		// app version -- uses hello world view
@@ -52,6 +69,12 @@ public class LibraryManagerController {
 		return "hello";
 	}
 	
+	/**
+	 * Returns the book list from the library as JSON
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="/books", method=RequestMethod.GET)
 	public @ResponseBody ServiceResponse getBookList(Model model) {
 		logger.debug("requested book list");
@@ -65,16 +88,22 @@ public class LibraryManagerController {
 		
 	}
 	
+	/**
+	 * Record a new book into library.
+	 * 
+	 * @param request
+	 * @param newBook
+	 * @return
+	 */
 	@RequestMapping(value="/addNewBook", method=RequestMethod.POST)
 	public @ResponseBody ServiceResponse addNewBook(HttpServletRequest request,
-			@RequestBody RequestNewBook newBook,
-			Model model) {
+			@RequestBody RequestNewBook newBook) {
 		logger.debug(String.format("requested addNewBook => %s", newBook));
 		
 		try {
 			// check captcha test
 			String userCaptchaResponse = newBook.verify.trim();
-			boolean captchaPassed = SimpleImageCaptchaServlet.validateResponse(request, userCaptchaResponse);
+			boolean captchaPassed = captchaService.validateResponse(request, userCaptchaResponse);
 			if (!captchaPassed) {
 				logger.info(String.format("Failed captcha. IP:[%s]", request.getRemoteAddr()));
 				return new ServiceResponse(T_RESP_CODE.INSECURE, "Check http://en.wikipedia.org/wiki/Chinese_room");
@@ -83,7 +112,7 @@ public class LibraryManagerController {
 			// get the posted data
 			String title = newBook.getTitle().trim();
 			String author = newBook.getAuthor().trim();
-			Book theNewBook = new Book(title, author);
+			Book theNewBook = new Book(author, title);
 			
 			// send to db
 			theNewBook = recordNewBook(theNewBook);
@@ -100,7 +129,13 @@ public class LibraryManagerController {
 		}
 	}
 	
-	protected Book findABook(String id) {
+	/**
+	 * Search for a book
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Book findABook(String id) {
 		try {
 			return repository.findOne(id);
 		} catch (Exception e) {
@@ -109,7 +144,13 @@ public class LibraryManagerController {
 		}
 	}
 	
-	protected Book recordNewBook(Book book) {
+	/**
+	 * Do record a new book into DB
+	 * 
+	 * @param book
+	 * @return
+	 */
+	public Book recordNewBook(Book book) {
 		try {
 			return repository.save(book);
 		} catch (Exception e) {
@@ -118,7 +159,12 @@ public class LibraryManagerController {
 		}
 	}
 	
-	protected BookList getBookList() {
+	/**
+	 * Get the book list from the library
+	 * 
+	 * @return
+	 */
+	public BookList getBookList() {
 		try {
 			BookList resultSet = new BookList(repository.findAll());
 			return resultSet;
@@ -126,6 +172,24 @@ public class LibraryManagerController {
 			logger.error("Couldnot write book into DB", e);
 			return null;
 		}
+	}
+	
+	/**
+	 * Change/set the image captcha service (most probably you won't need)
+	 * 
+	 * @param imgCaptchaService
+	 */
+	public void setCaptchaService(CaptchaService imgCaptchaService) {
+		this.captchaService = imgCaptchaService;
+	}
+	
+	/**
+	 * Change repository manager (most probably you won't need)
+	 * 
+	 * @param repos
+	 */
+	public void setRepository(IBookRepository repos) {
+		this.repository = repos;
 	}
 
 	@RequestMapping(value="/", method=RequestMethod.GET)
