@@ -27,7 +27,8 @@
 		<spring.mongo.version>1.5.5.BUILD-SNAPSHOT</spring.mongo.version>
 		<mongo.java.version>2.12.5</mongo.java.version>
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
-		<webapp.runner.version>7.0.57.1</webapp.runner.version>
+		<webapp.runner.version>7.0.22.1</webapp.runner.version>
+			<!--7.0.57.1-->
 		
 		<REMEMBER.TO.CHECK.LOCAL.REPOS>1</REMEMBER.TO.CHECK.LOCAL.REPOS>
 	</properties>
