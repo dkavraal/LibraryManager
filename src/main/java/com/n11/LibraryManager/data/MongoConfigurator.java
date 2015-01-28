@@ -1,11 +1,11 @@
 package com.n11.LibraryManager.data;
 
-import java.net.UnknownHostException;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.authentication.UserCredentials;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -21,6 +21,7 @@ import com.mongodb.MongoURI;
 @PropertySource("classpath:mongodb.properties")
 @Configuration
 public class MongoConfigurator {
+	protected static Logger logger = Logger.getLogger(MongoConfigurator.class.getName());
 	private static final String mongoURI = System.getenv("MONGOLAB_URI");
 	private static boolean isHeroku;
 	
@@ -44,21 +45,37 @@ public class MongoConfigurator {
 	}
 	
 	@Bean
-	public DB db() throws UnknownHostException {
+	public DB db() throws Exception {
 		return mongo().getDB(dbName);
 	}
 	
 	@Bean
-	public Mongo mongo() throws UnknownHostException {
+	public Mongo mongo() throws Exception {
 		if (isHeroku) {
-			return new Mongo(new MongoURI(mongoURI));
-		} else {
-			return new MongoClient(dbHost, dbPort);
+			MongoClientURI mongoClientURI = new MongoClientURI(mongoURI);
+			try {
+				return new Mongo(new MongoURI(mongoURI));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				return new MongoClient(mongoClientURI);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
+
+		return new MongoClient(dbHost, dbPort);
 	}
 
 	public @Bean MongoDbFactory mongoDbFactory() throws Exception {
-		return new SimpleMongoDbFactory(mongo(), db().getName());
+		if (isHeroku) {
+			MongoClientURI mongoClientURI = new MongoClientURI(mongoURI);
+			return new SimpleMongoDbFactory(mongo(), dbName, new UserCredentials(mongoClientURI.getUsername(), mongoClientURI.getPassword().toString()));
+		}
+		return new SimpleMongoDbFactory(mongo(), dbName);
 	}
 
 	public @Bean MongoTemplate mongoTemplate() throws Exception {
