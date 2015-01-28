@@ -34,7 +34,7 @@
 				<div class="col-md-4">
 					<img id="captchaImg" src="" ng-model="captcha" ng-src="{{captcha_image}}" data-ng-init="refreshCaptcha()" class="pull-left" title="Click to change for another" alttext="Security Code Captcha Image" ng-click="refreshCaptcha()" />
 					<input type="text" class="form-control" id="newbook-captcha-input" placeholder="Code" size="5" ng-model="verify" required />
-					<small>To change, click the image</small> 
+					<small>To change, click on the image</small> 
 				</div>
 				
 				<div class="col-md-1">
@@ -81,8 +81,11 @@
 	</div>
 	
 	<footer class="footer">
-		<div class="container">
+		<div class="col-md-offset-2 pull-left">
 			<small>Library Manager ${version}</small>
+		</div>
+		<div class="pull-right col-md-2">
+			<small><a href="https://github.com/dkavraal/LibraryManager"><img src="<c:url value="/weblib/img/GitHub-Mark-64px.png" />" width="16px" height="16px"/>gh/dk/LM</a></small>
 		</div>
 	</footer>
 
