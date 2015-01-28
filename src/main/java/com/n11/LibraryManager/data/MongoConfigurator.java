@@ -14,11 +14,15 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 @EnableMongoRepositories
 @PropertySource("classpath:mongodb.properties")
 @Configuration
 public class MongoConfigurator {
+	private static final String mongoURI = System.getenv("MONGOLAB_URI");
+	private static final boolean isHeroku = !System.getenv("MONGOLAB_URI").equals("");
+	
 	@Value("${db.name}")
 	private String dbName;
 
@@ -27,20 +31,30 @@ public class MongoConfigurator {
 
 	@Value("${db.port}")
 	private int dbPort;
-
+	
+	public MongoConfigurator() {
+		MongoClientURI uri = new MongoClientURI(mongoURI);
+		dbName = uri.getDatabase();
+		dbHost = uri.getHosts().get(0);
+		//port TODO
+	}
+	
 	@Bean
 	public DB db() throws UnknownHostException {
 		return mongo().getDB(dbName);
 	}
-
+	
 	@Bean
 	public Mongo mongo() throws UnknownHostException {
-		return new MongoClient(dbHost, dbPort);
+		if (isHeroku) {
+			return new MongoClient(new MongoClientURI(mongoURI));
+		} else {
+			return new MongoClient(dbHost, dbPort);
+		}
 	}
 
 	public @Bean MongoDbFactory mongoDbFactory() throws Exception {
-		//UserCredentials userCredentials = new UserCredentials("joe", "secret");
-		return new SimpleMongoDbFactory(new MongoClient(dbHost, dbPort), dbName);//, userCredentials);
+		return new SimpleMongoDbFactory(mongo(), db().getName());
 	}
 
 	public @Bean MongoTemplate mongoTemplate() throws Exception {
