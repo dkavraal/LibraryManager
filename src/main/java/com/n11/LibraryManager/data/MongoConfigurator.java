@@ -37,9 +37,13 @@ public class MongoConfigurator {
 	public MongoConfigurator() {
 		isHeroku = !(System.getenv("MONGOLAB_URI") == null || System.getenv("MONGOLAB_URI").equals(""));
 		if (isHeroku) {
-			MongoClientURI uri = new MongoClientURI(mongoURI);
-			dbName = uri.getDatabase();
-			dbHost = uri.getHosts().get(0);
+			try {
+				MongoClientURI uri = new MongoClientURI(mongoURI);
+				dbName = uri.getDatabase();
+				dbHost = uri.getHosts().get(0);
+			} catch (Exception e) {
+				logger.error("MongoConfigurator cannot start.", e);
+			}
 			//port TODO
 		}
 	}
@@ -49,20 +53,21 @@ public class MongoConfigurator {
 		return mongo().getDB(dbName);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Bean
 	public Mongo mongo() throws Exception {
 		if (isHeroku) {
-			MongoClientURI mongoClientURI = new MongoClientURI(mongoURI);
 			try {
 				return new Mongo(new MongoURI(mongoURI));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("MongoConfigurator cannot create a client connection.", e);
 			}
 			
 			try {
+				MongoClientURI mongoClientURI = new MongoClientURI(mongoURI);
 				return new MongoClient(mongoClientURI);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("MongoConfigurator cannot create a client connection.", e);
 			}
 			
 		}
