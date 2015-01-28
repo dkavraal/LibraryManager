@@ -11,9 +11,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.version>1.8</maven.compiler.version>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.version>1.7</maven.compiler.version>
 		
 		<java.servlet>3.1.0</java.servlet>
 		<spring.version>3.2.12.RELEASE</spring.version>
@@ -27,7 +27,7 @@
 		<spring.mongo.version>1.5.5.BUILD-SNAPSHOT</spring.mongo.version>
 		<mongo.java.version>2.11.3</mongo.java.version>
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
-		<webapp.runner.version>7.0.57.1</webapp.runner.version>
+		<webapp.runner.version>7.0.40.2</webapp.runner.version>
 		
 		<REMEMBER.TO.CHECK.LOCAL.REPOS>1</REMEMBER.TO.CHECK.LOCAL.REPOS>
 	</properties>
@@ -168,42 +168,51 @@
 			<artifactId>sp-captcha-filters</artifactId>
 			<version>2.0.235</version>
 		</dependency>
+		
+		<!-- build -->
+		<dependency>
+            <groupId>com.github.jsimone</groupId>
+            <artifactId>webapp-runner</artifactId>
+            <version>${webapp.runner.version}</version>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 	<build>
 		<finalName>LibraryManager</finalName>
 		<plugins>
-	    <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-compiler-plugin</artifactId>
-	      <version>${maven.compiler.plugin.version}</version>
-	      <configuration>
-	        <verbose>true</verbose>
-	        <compilerVersion>${maven.compiler.version}</compilerVersion>
-	        <source>${maven.source.target}</source>
-	        <target>${maven.compiler.target}</target>
-	      </configuration>
-	    </plugin>
-	    <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.3</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals><goal>copy</goal></goals>
-                    <configuration>
-                        <artifactItems>
-                            <artifactItem>
-                                <groupId>com.github.jsimone</groupId>
-                                <artifactId>webapp-runner</artifactId>
-                                <version>${webapp.runner.version}</version>
-                                <destFileName>webapp-runner.jar</destFileName>
-                            </artifactItem>
-                        </artifactItems>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+			<plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-compiler-plugin</artifactId>
+		      <version>${maven.compiler.plugin.version}</version>
+		      <configuration>
+		        <verbose>true</verbose>
+		        <compilerVersion>${maven.compiler.version}</compilerVersion>
+		        <source>${maven.source.target}</source>
+		        <target>${maven.compiler.target}</target>
+		      </configuration>
+		    </plugin>
+		    
+		    <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-dependency-plugin</artifactId>
+	            <version>2.3</version>
+	            <executions>
+	                <execution>
+	                    <phase>package</phase>
+	                    <goals><goal>copy</goal></goals>
+	                    <configuration>
+	                        <artifactItems>
+	                            <artifactItem>
+	                                <groupId>com.github.jsimone</groupId>
+	                                <artifactId>webapp-runner</artifactId>
+	                                <version>${webapp.runner.version}</version>
+	                                <destFileName>webapp-runner.jar</destFileName>
+	                            </artifactItem>
+	                        </artifactItems>
+	                    </configuration>
+	                </execution>
+	            </executions>
+	        </plugin>
 	  </plugins>
 	</build>
 	<repositories>
