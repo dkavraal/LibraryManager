@@ -134,6 +134,30 @@
 			<artifactId>commons-collections</artifactId>
 			<version>${apache-commons.version}</version>
 		</dependency>
+		
+		<!-- Captcha (local) -->
+
+
+		<dependency>
+			<groupId>com.octo.captcha</groupId>
+			<artifactId>sp-captcha-simple-integration</artifactId>
+			<version>2.0.235</version>
+		</dependency>
+		<dependency>
+			<groupId>com.octo.captcha</groupId>
+	  		<artifactId>sp-captcha-2-a</artifactId>
+	  		<version>2.0.1</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>com.octo.captcha</groupId>
+			<artifactId>sp-captcha-api</artifactId>
+		    <version>1.0.0</version>
+  		</dependency>
+  		<dependency>
+			<groupId>com.octo.captcha</groupId>
+			<artifactId>sp-captcha-filters</artifactId>
+			<version>2.0.235</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>LibraryManager</finalName>
@@ -147,5 +171,10 @@
 	            <enabled>true</enabled>
 	        </snapshots>
 	    </repository>
+	    <repository>
+	        <id>project.local</id>
+	        <name>project</name>
+	        <url>file:${project.basedir}/repo/</url>
+    	</repository>
     </repositories>
 </project>
