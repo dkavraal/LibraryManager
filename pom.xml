@@ -13,6 +13,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.version>1.8</maven.compiler.version>
+		
 		<java.servlet>3.1.0</java.servlet>
 		<spring.version>3.2.12.RELEASE</spring.version>
 		<junit.version>4.8.2</junit.version>
@@ -176,9 +178,9 @@
 	      <version>${maven.compiler.plugin.version}</version>
 	      <configuration>
 	        <verbose>true</verbose>
-	        <compilerVersion>1.8</compilerVersion>
-	        <source>1.8</source>
-	        <target>1.6</target>
+	        <compilerVersion>${maven.compiler.version}</compilerVersion>
+	        <source>${maven.source.target}</source>
+	        <target>${maven.compiler.target}</target>
 	      </configuration>
 	    </plugin>
 	    <plugin>
