@@ -22,24 +22,5 @@ http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 	<mvc:annotation-driven />
-
-	<!-- bean id="mongo" class="com.mongodb.MongoClient">
-       <constructor-arg value="${db.host}"/>
-       <constructor-arg value="${db.port}"/>
-   	</bean>
-   	<bean id="db" class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
-		<property name="mongo" ref="mongo"/>
-		<property name="name" value="${db.name}"/>
-	</bean-->
-	
-	<!-- mongo:mongo host="localhost" port="27017">
-		<mongo:options connections-per-host="8"
-			threads-allowed-to-block-for-connection-multiplier="4"
-			connect-timeout="1000" max-wait-time="1500" auto-connect-retry="true"
-			socket-keep-alive="true" socket-timeout="1500" slave-ok="true"
-			write-number="1" write-timeout="0" write-fsync="true" />
-	</mongo:mongo>
-	
-	<mongo:repositories base-package="com.n11.LibraryManager.data" /-->
    	
 </beans>

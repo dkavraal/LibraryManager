@@ -32,6 +32,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 import com.n11.LibraryManager.data.IBookRepository;
+import com.n11.LibraryManager.data.MongoConfigurator;
 import com.n11.LibraryManager.model.Book;
 import com.n11.LibraryManager.model.RequestNewBook;
 import com.n11.LibraryManager.service.CaptchaService;
@@ -40,16 +41,12 @@ import com.n11.LibraryManager.service.ServiceResponse;
 import com.n11.LibraryManager.service.ServiceResponse.T_RESP_CODE;
 
 
-/**
- * @author 194091
- *
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration("test-servlet-context.xml")
 public class LibraryManagerControllerTest {
-	private static final String TEST_DB_DB = "local";
-	private static final String TEST_DB_COLLECTION = "book";
+	private static String TEST_DB_DB;
+	private static String TEST_DB_COLLECTION = "books";
 	
 	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
 	        MediaType.APPLICATION_JSON.getType(),
@@ -66,6 +63,7 @@ public class LibraryManagerControllerTest {
 	private CaptchaService imgCaptchaService;
 	private IBookRepository bookRepository;
 	private HttpServletRequest httpReq;
+	@SuppressWarnings("unused")
 	private HttpServletResponse httpResp;
 	
 	@BeforeClass
@@ -73,14 +71,10 @@ public class LibraryManagerControllerTest {
 		mongo = mock(Mongo.class);
 		db = mock(DB.class);
 		dbCollection = mock(DBCollection.class);
-
-		when(mongo.getDB(TEST_DB_DB)).thenReturn(db);
-		when(db.getCollection(TEST_DB_COLLECTION)).thenReturn(dbCollection);
 	}
 	
-	
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		mockMvc = webAppContextSetup(this.wac).build();
 		httpResp = mock(HttpServletResponse.class);
 		httpReq = mock(HttpServletRequest.class);
@@ -88,6 +82,15 @@ public class LibraryManagerControllerTest {
 		libManService = spy(new LibraryManagerController());
 		imgCaptchaService = mock(CaptchaService.class);
 		bookRepository = mock(IBookRepository.class);
+		
+		MongoConfigurator mongoConf = new MongoConfigurator();
+		TEST_DB_DB = mongoConf.db().getName();
+	}
+	
+	@Test
+	public void test_db_conf() {
+		when(mongo.getDB(TEST_DB_DB)).thenReturn(db);
+		when(db.getCollection(TEST_DB_COLLECTION)).thenReturn(dbCollection);
 	}
 	
 	@Test
@@ -181,7 +184,8 @@ public class LibraryManagerControllerTest {
 	@Test
 	public void method_findABook_test() {
 		libManService.setRepository(bookRepository);
-		Book b = libManService.findABook("1");
+		//Book b = 
+			libManService.findABook("1");
 		verify(bookRepository).findOne(eq("1"));
 	}
 	
