@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>com.octo.captcha</groupId>
 			<artifactId>sp-captcha-simple-integration</artifactId>
-			<version>2.0.235</version>
+			<version>2.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.octo.captcha</groupId>
@@ -175,6 +175,9 @@
 	        <id>project.local</id>
 	        <name>project</name>
 	        <url>file:${project.basedir}/repo/</url>
+	        <snapshots>
+	            <enabled>true</enabled>
+	        </snapshots>
     	</repository>
     </repositories>
 </project>
