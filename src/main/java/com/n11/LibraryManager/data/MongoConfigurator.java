@@ -21,7 +21,7 @@ import com.mongodb.MongoClientURI;
 @Configuration
 public class MongoConfigurator {
 	private static final String mongoURI = System.getenv("MONGOLAB_URI");
-	private static final boolean isHeroku = !System.getenv("MONGOLAB_URI").equals("");
+	private static boolean isHeroku;
 	
 	@Value("${db.name}")
 	private String dbName;
@@ -33,10 +33,13 @@ public class MongoConfigurator {
 	private int dbPort;
 	
 	public MongoConfigurator() {
-		MongoClientURI uri = new MongoClientURI(mongoURI);
-		dbName = uri.getDatabase();
-		dbHost = uri.getHosts().get(0);
-		//port TODO
+		isHeroku = !(System.getenv("MONGOLAB_URI") == null || System.getenv("MONGOLAB_URI").equals(""));
+		if (isHeroku) {
+			MongoClientURI uri = new MongoClientURI(mongoURI);
+			dbName = uri.getDatabase();
+			dbHost = uri.getHosts().get(0);
+			//port TODO
+		}
 	}
 	
 	@Bean
