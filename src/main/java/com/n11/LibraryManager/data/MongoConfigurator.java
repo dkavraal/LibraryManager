@@ -15,6 +15,7 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.MongoURI;
 
 @EnableMongoRepositories
 @PropertySource("classpath:mongodb.properties")
@@ -50,7 +51,7 @@ public class MongoConfigurator {
 	@Bean
 	public Mongo mongo() throws UnknownHostException {
 		if (isHeroku) {
-			return new MongoClient(new MongoClientURI(mongoURI));
+			return new Mongo(new MongoURI(mongoURI));
 		} else {
 			return new MongoClient(dbHost, dbPort);
 		}
