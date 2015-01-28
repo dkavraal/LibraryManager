@@ -80,6 +80,7 @@ app.controller("LibManAdd", function($scope, $http) {
                 $scope.verify = null;
                 $scope.refreshCaptcha();
                 $scope.showSuccessMessage('Great. Done.');
+                //TODO refresh list // or easily add the last added (returned info)
             } else {
             	$scope.showDangerMessage('There has been a problem. CODE:' + data['RESP_CODE']);
             }

@@ -130,6 +130,60 @@ public class LibraryManagerController {
 	}
 	
 	/**
+	 * Delete a book off the library.
+	 * 
+	 * @param request
+	 * @param newBook
+	 * @return
+	 */
+	@RequestMapping(value="/deleteBook", method=RequestMethod.POST)
+	public @ResponseBody ServiceResponse deleteBook(HttpServletRequest request,
+			@RequestBody String id) {
+		logger.debug(String.format("requested deleteBook => %s", id));
+		
+		try {
+			// get the posted data
+			id = id.trim();
+			// send off db, if any
+			deleteTheBook(id);
+			
+			return new ServiceResponse(T_RESP_CODE.OK, id);
+			
+		} catch (Exception e) {
+			logger.error("Failed removing from the db.", e);
+			return new ServiceResponse(T_RESP_CODE.NOK, "Sth is very wrong");
+		}
+	}
+	
+	/**
+	 * Delete a book off the library.
+	 * 
+	 * @param request
+	 * @param newBook
+	 * @return
+	 */
+	@RequestMapping(value="/updateBook", method=RequestMethod.POST)
+	public @ResponseBody ServiceResponse updateBook(HttpServletRequest request,
+			@RequestBody Book updateReqBook) {
+		logger.debug(String.format("requested deleteBook => %s", updateReqBook));
+		
+		try {
+			// send to db
+			updateReqBook = updateTheBook(updateReqBook);
+			
+			// reply back to user
+			if (updateReqBook != null) {
+				return new ServiceResponse(T_RESP_CODE.OK, updateReqBook);
+			} else {
+				return new ServiceResponse(T_RESP_CODE.DBERROR, "Couldnot update the book");
+			}
+		} catch (Exception e) {
+			logger.error("Failed updating the book on db.", e);
+			return new ServiceResponse(T_RESP_CODE.NOK, "Sth is very wrong");
+		}
+	}
+	
+	/**
 	 * Search for a book
 	 * 
 	 * @param id
@@ -140,6 +194,35 @@ public class LibraryManagerController {
 			return repository.findOne(id);
 		} catch (Exception e) {
 			logger.error("Failed finding the book DB", e);
+			return null;
+		}
+	}
+	
+	/**
+	 * Delete the book
+	 * 
+	 * @param id book record ID
+	 * @return
+	 */
+	public void deleteTheBook(String id) {
+		try {
+			repository.delete(id);
+		} catch (Exception e) {
+			logger.error("Failed deleting the book", e);
+		}
+	}
+	
+	/**
+	 * Update the book's information
+	 * 
+	 * @param book up to date book information, if ID doesn't exist in DB, it will be appended into DB
+	 * @return
+	 */
+	public Book updateTheBook(Book book) {
+		try {
+			return recordNewBook(book);
+		} catch (Exception e) {
+			logger.error("Failed deleting the book", e);
 			return null;
 		}
 	}

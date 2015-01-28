@@ -16,6 +16,12 @@ public class Book {
 		this.title = title;
 	}
 		
+	public Book(String id, String author, String title) {
+		this.uuid = id;
+		this.author = author;
+		this.title = title;
+	}
+		
 	public String getAuthor() {
 		return author;
 	}
@@ -35,6 +41,11 @@ public class Book {
 	public String getId() {
 		return this.uuid;
 	}
+	
+	public void setId(String id) {
+		this.uuid = id;
+	}
+	
 
 	@Override
 	public String toString() {

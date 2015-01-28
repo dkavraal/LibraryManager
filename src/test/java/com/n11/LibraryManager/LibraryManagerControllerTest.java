@@ -13,7 +13,8 @@ import java.nio.charset.Charset;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Assert.*;
+import net.minidev.json.JSONObject;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -90,20 +91,15 @@ public class LibraryManagerControllerTest {
 	}
 	
 	@Test
-	public void web_application_version_service_should_return_ok()
+	public void service_web_application_version_service_should_return_ok()
 			throws Exception {
 		// a primitive service for also test purposes - DK
-		this.mockMvc.perform(get("/version").accept(MediaType.TEXT_HTML))
+		mockMvc.perform(get("/version").accept(MediaType.TEXT_HTML))
 					.andExpect(status().isOk());
-	}
-
-	@Test
-	public void new_book_item_info_should_be_recorded_into_db() throws Exception {
-		
 	}
 	
 	@Test
-	public void wrong_captcha_should_disallow_new_book_record() throws Exception {
+	public void method_wrong_captcha_should_disallow_new_book_record() throws Exception {
 		doReturn(true).when(imgCaptchaService).validateResponse(eq(httpReq), anyString());
 		
 		RequestNewBook newBook = new RequestNewBook();
@@ -119,12 +115,10 @@ public class LibraryManagerControllerTest {
 	}
 
 	@Test
-	public void get_books_should_return_list() throws Exception {
+	public void service_get_books_should_return_list() throws Exception {
 		//json response bookListResultShouldContain  "bookList"; 
 		//   and a book with a title
-		//   !! make sure insert tested before this
-		
-		this.mockMvc.perform(get("/books").accept(APPLICATION_JSON_UTF8))
+		mockMvc.perform(get("/books").accept(APPLICATION_JSON_UTF8))
 					.andExpect(status().isOk())
 					.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 					.andExpect(jsonPath("$.R[0].bookList").isArray())
@@ -132,7 +126,15 @@ public class LibraryManagerControllerTest {
 	}
 	
 	@Test
-	public void add_new_book_should_record_the_book() throws Exception {
+	public void method_get_book_list_test() {
+		libManService.setRepository(bookRepository);
+		libManService.getBookList();
+		verify(libManService, times(1)).getBookList();
+		verify(bookRepository, times(1)).findAll();
+	}
+	
+	@Test
+	public void method_add_new_book_should_call_db_record() throws Exception {
 		doReturn(true).when(imgCaptchaService).validateResponse(eq(httpReq), anyString());
 		libManService.setCaptchaService(imgCaptchaService);
 		libManService.setRepository(bookRepository);
@@ -157,6 +159,57 @@ public class LibraryManagerControllerTest {
 		assertEquals(newBookInstance.getValue().getTitle(), newBook.getTitle());
 		
 		resp.getResponseType().equals(ServiceResponse.T_RESP_CODE.OK);
+	}
+	
+	@Test
+	public void service_addNewBook_test() throws Exception {
+		JSONObject jsonNewBook = new JSONObject();
+		jsonNewBook.put("id", "@id");
+		jsonNewBook.put("author", "a new writer");
+		jsonNewBook.put("title", "a new subject");
+		jsonNewBook.put("verify", "captcha-text");
+		
+		mockMvc.perform(post("/addNewBook")
+							.content(jsonNewBook.toJSONString())
+							.contentType(APPLICATION_JSON_UTF8)
+							.accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk())
+					.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+					.andExpect(jsonPath("$.RESP_CODE").value("INSECURE"));
+	}
+	
+	@Test
+	public void method_findABook_test() {
+		libManService.setRepository(bookRepository);
+		Book b = libManService.findABook("1");
+		verify(bookRepository).findOne(eq("1"));
+	}
+	
+	@Test
+	public void service_updating_a_book_test() throws Exception {
+		JSONObject jsonNewBook = new JSONObject();
+		jsonNewBook.put("id", "@id");
+		jsonNewBook.put("author", "updated writer");
+		jsonNewBook.put("title", "updated subject");
+		
+		mockMvc.perform(post("/updateBook")
+							.content(jsonNewBook.toJSONString())
+							.contentType(APPLICATION_JSON_UTF8)
+							.accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk())
+					.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+					.andExpect(jsonPath("$.RESP_CODE").value("OK"))
+					.andExpect(jsonPath("$.R").isArray())
+					.andExpect(jsonPath("$.R[0].id").exists());
+	}
+	
+	@Test
+	public void method_update_book_test() {
+		Book updateReqBook = new Book("@+id", "edited author", "edited title");
+		libManService.setRepository(bookRepository);
+		
+		libManService.updateBook(httpReq, updateReqBook);
+		verify(libManService, times(1)).updateTheBook(eq(updateReqBook));
 	}
 	
 }
