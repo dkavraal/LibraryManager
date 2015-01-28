@@ -174,10 +174,18 @@
 	    <repository>
 	        <id>project.local</id>
 	        <name>project</name>
-	        <url>file:${project.basedir}/repo</url>
+	        <url>http://repos.bunuoku.com/repo</url>
 	        <snapshots>
 	            <enabled>true</enabled>
 	        </snapshots>
     	</repository>
+	    <!-- repository>
+	        <id>project.local</id>
+	        <name>project</name>
+	        <url>file:${project.basedir}/repo</url>
+	        <snapshots>
+	            <enabled>true</enabled>
+	        </snapshots>
+    	</repository-->
     </repositories>
 </project>
