@@ -1,4 +1,4 @@
-var appPath = function(p) { return APPPATH + "/" + p; };
+var appPath = function(p) { if (APPPATH !== undefined && APPPATH != null && APPPATH != "") { return APPPATH + "/" + p; } else { return p } };
 var app = angular.module("LibMan", ['ui.bootstrap', 'ngAnimate', 'ngDialog']);
 
 app.controller("LibManList", function($scope, $rootScope, $http, ngDialog) {
@@ -32,7 +32,7 @@ app.controller("LibManList", function($scope, $rootScope, $http, ngDialog) {
 	
 	$scope.openDelDialog = function(book) {
 		$scope.openedDialog = ngDialog.open({
-			template: appPath('weblib/template/removeItem.html'),
+			template: appPath('/weblib/template/removeItem.html'),
 			controller: 'modalDelDialogCtrl',
 			scope: $scope,
 			data: {book: book},
@@ -42,7 +42,7 @@ app.controller("LibManList", function($scope, $rootScope, $http, ngDialog) {
 	$scope.openUpdDialog = function(book) {
 		$scope.updatebook = cloneObject(book);
 		$scope.openedDialog = ngDialog.open({
-			template: appPath('weblib/template/editItem.html'),
+			template: appPath('/weblib/template/editItem.html'),
 			controller: 'modalUpdDialogCtrl',
 			scope: $scope,
 			data: {book: book},
