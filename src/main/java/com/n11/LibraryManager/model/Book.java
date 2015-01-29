@@ -2,11 +2,15 @@ package com.n11.LibraryManager.model;
 
 import org.springframework.data.annotation.Id;
 
-
 public class Book {
 	@Id
 	private String uuid = null;
+	
+	//@NotNull
+	//@Size(max=50)
 	private String author = null;
+	//@NotNull
+	//@Size(max=70)
 	private String title = null;
 
 	public Book() { }

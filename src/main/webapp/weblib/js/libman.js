@@ -1,34 +1,122 @@
-var app = angular.module("LibMan", ['dialogs']);
+var appPath = function(p) { return APPPATH + "/" + p; };
+var app = angular.module("LibMan", ['ui.bootstrap', 'ngAnimate', 'ngDialog']);
 
-app.controller("LibManList", function($scope, $http) {
+app.controller("LibManList", function($scope, $rootScope, $http, ngDialog) {
 	$scope.loadLibrary = function() {
-		$http.get(APPPATH + '/books')
+		$scope.loading = true;
+		$http.get(appPath('/books'))
 			.success(
 				function(data, status, headers, config) {
+					$scope.loading = false;
+					$scope.loadError = false;
 					if (data['RESP_CODE'] == 'OK') {
 						try {
 							$scope.bookList = data['R'][0]['bookList'];
 						} catch (e) {
-							//TODO server problem. db? tomcat? etc (see: data['RESP_CODE'])
-							//put a refresh button
+							$scope.loading = false;
+							$scope.loadError = true;
 						}
+					} else {
+						$scope.loading = false;
+						$scope.loadError = true;
 					}
 				}
 			)
 			.error(
 				function(data, status, headers, config) {
-					//TODO resp unavailable -- server down? user network down? timeout?
-					//put a refresh button
+					$scope.loading = false;
+					$scope.loadError = true;
 				}
 			);
 	};
-
-	$scope.$on('reloadLibrary', function(event, args) { $scope.loadLibrary();});
 	
- 	$scope.loadLibrary();
+	$scope.openDelDialog = function(book) {
+		$scope.openedDialog = ngDialog.open({
+			template: appPath('weblib/template/removeItem.html'),
+			controller: 'modalDelDialogCtrl',
+			scope: $scope,
+			data: {book: book},
+		});
+	};
+
+	$scope.openUpdDialog = function(book) {
+		$scope.updatebook = cloneObject(book);
+		$scope.openedDialog = ngDialog.open({
+			template: appPath('weblib/template/editItem.html'),
+			controller: 'modalUpdDialogCtrl',
+			scope: $scope,
+			data: {book: book},
+		});
+	};
+
+	$rootScope.$on('reloadLibrary', function(event, args) { $scope.loadLibrary();});
+	$scope.loadLibrary();
 });
 
-app.controller("LibManAdd", function($scope, $http) {
+app.controller("modalDelDialogCtrl", function ($scope, $rootScope, $http, ngDialog) {
+	$scope.ok = function(id) {
+		$scope.deleteProcess = true;
+		
+		$http({
+			headers : { 'Content-Type': 'application/json; charset=utf-8' },
+	        url     : appPath('/deleteBook/'+id),
+			method  : 'GET',
+	    }).success(function(data) {
+			if (data['RESP_CODE'] == 'OK') {
+				$rootScope.$emit('showSuccessMessage', 'Great. Deleted, as you wished.');
+			} else {
+				$rootScope.$emit('showDangerMessage', 'There has been a problem. CODE:' + data['RESP_CODE']);
+			}
+
+			$rootScope.$emit('reloadLibrary');
+      }).error(function(data, status, headers, config) {
+    	  $rootScope.$emit('showDangerMessage', 'There has been a problem.');
+      })['finally'](function() {
+    	  $scope.deleteProcess = false;
+    	  $scope.openedDialog.close();
+      });
+	};
+
+	$scope.cancel = function () {
+		$scope.openedDialog.close();
+	};
+});
+
+app.controller("modalUpdDialogCtrl", function ($scope, $rootScope, $http, ngDialog) {
+	$scope.ok = function(id, title, author) {
+		$scope.updateProcess = true;
+		var dataToSend = {
+	          title:  $scope.updatebook.title,
+	          author: $scope.updatebook.author,
+	       };
+	
+		$http({
+			headers : { 'Content-Type': 'application/json; charset=utf-8' },
+			data	: dataToSend,
+	        url     : appPath('/updateBook/' + id),
+			method  : 'POST',
+	    }).success(function(data) {
+			if (data['RESP_CODE'] == 'OK') {
+				$rootScope.$emit('showSuccessMessage', 'Great. Updated, as you wished.');
+			} else {
+				$rootScope.$emit('showDangerMessage', 'There has been a problem. CODE:' + data['RESP_CODE']);
+			};
+
+			$rootScope.$emit('reloadLibrary');
+      }).error(function(data, status, headers, config) {
+    	  $rootScope.$emit('showDangerMessage', 'There has been a problem.');
+      })['finally'](function() {
+    	  $scope.updateProcess = false;
+    	  $scope.openedDialog.close();
+      });
+	};
+
+	$scope.cancel = function () {
+		$scope.openedDialog.close();
+	};
+});
+
+app.controller("LibManAdd", function($scope, $rootScope, $http) {
 	$scope.showSuccessMessage = function(message, timeout_value) {
 		if (timeout_value === undefined) timeout_value = 3000;
 		
@@ -55,11 +143,11 @@ app.controller("LibManAdd", function($scope, $http) {
 	
 	$scope.refreshCaptcha = function() {
 		$scope.captcha_image = '#';
-		$scope.captcha_image = APPPATH + '/captcha.jpg?' + new Date().getTime();
+		$scope.captcha_image = appPath('/captcha.jpg') + '?' + new Date().getTime();
 	};
 	
 	$scope.submitNewBook = function() {
-		$scope.$broadcast('reloadLibrary', null);
+		$rootScope.$broadcast('reloadLibrary', null);
 		
 		$scope.loading = true;
 		var dataToSend = {
@@ -70,7 +158,7 @@ app.controller("LibManAdd", function($scope, $http) {
 		
 		$http({
 			headers : { 'Content-Type': 'application/json; charset=utf-8' },
-	        url     : APPPATH + '/addNewBook',
+	        url     : appPath('/addNewBook'),
 			data    : dataToSend,
 			method  : 'POST',
 	    }).success(function(data) {
@@ -80,15 +168,39 @@ app.controller("LibManAdd", function($scope, $http) {
                 $scope.verify = null;
                 $scope.refreshCaptcha();
                 $scope.showSuccessMessage('Great. Done.');
-                //TODO refresh list // or easily add the last added (returned info)
             } else {
             	$scope.showDangerMessage('There has been a problem. CODE:' + data['RESP_CODE']);
             }
             $scope.$emit('reloadLibrary');
         }).error(function(data, status, headers, config) {
         	$scope.showDangerMessage('There was a problem.');
-        }).finally(function() {
+        })['finally'](function() {
         	$scope.loading = false;
         });
 	};
+	
+	$rootScope.$on('showDangerMessage', function(event, args) { $scope.showDangerMessage(args);});
+	$rootScope.$on('showSuccessMessage', function(event, args) { $scope.showSuccessMessage(args);});
+	
 });
+
+app.config(['ngDialogProvider', function (ngDialogProvider) {
+	ngDialogProvider.setDefaults({
+		className: 'ngdialog-theme-default',
+		controller: 'InsideCtrl',
+		plain: false,
+		showClose: false,
+		closeByDocument: true,
+		closeByEscape: true,
+		appendTo: false,
+		/*preCloseCallback: function () {
+			console.log('default pre-close callback');
+		}*/
+	});
+}]);
+
+function cloneObject(o) {
+    function F() {}
+    F.prototype = o;
+    return new F();
+}

@@ -192,11 +192,12 @@ public class LibraryManagerControllerTest {
 	@Test
 	public void service_updating_a_book_test() throws Exception {
 		JSONObject jsonNewBook = new JSONObject();
-		jsonNewBook.put("id", "@id");
+		String id = "@id";
+		//jsonNewBook.put("id", id);
 		jsonNewBook.put("author", "updated writer");
 		jsonNewBook.put("title", "updated subject");
 		
-		mockMvc.perform(post("/updateBook")
+		mockMvc.perform(post("/updateBook/" + id)
 							.content(jsonNewBook.toJSONString())
 							.contentType(APPLICATION_JSON_UTF8)
 							.accept(MediaType.APPLICATION_JSON))
@@ -212,7 +213,7 @@ public class LibraryManagerControllerTest {
 		Book updateReqBook = new Book("@+id", "edited author", "edited title");
 		libManService.setRepository(bookRepository);
 		
-		libManService.updateBook(httpReq, updateReqBook);
+		libManService.updateBook(httpReq, updateReqBook.getId(), updateReqBook);
 		verify(libManService, times(1)).updateTheBook(eq(updateReqBook));
 	}
 	

@@ -1,0 +1,17 @@
+<div class="ngdialog-message">
+	<h4>Delete?</h4>
+	<p>Are you sure to delete:</p>
+	<p>
+		<code>{{ngDialogData.book.title}} <i>by </i>{{ngDialogData.book.author}}</code>
+	</p>
+	
+	<div class="progress" ng-show="deleteProcess">
+		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+			<span>Please wait...</span>
+		</div>
+	</div>
+</div>
+<div class="ngdialog-buttons">
+	<button type="button" class="btn btn-default pull-right" ng-class="{'disabled': deleteProcess}" ng-disabled="deleteProcess" ng-click="cancel()">Cancel</button>
+	<button type="button" class="btn btn-info pull-left" ng-class="{'disabled': deleteProcess}" ng-disabled="deleteProcess" ng-click="ok(ngDialogData.book.id)">Confirm</button>
+</div>

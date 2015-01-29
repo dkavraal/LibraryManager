@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -80,8 +81,14 @@ public class LibraryManagerController {
 		logger.debug("requested book list");
 		
 		try {
-			return new ServiceResponse(T_RESP_CODE.OK, getBookList());
+			BookList bookList = getBookList();
+			if (bookList != null) {
+				return new ServiceResponse(T_RESP_CODE.OK, bookList);
+			} else {
+				return new ServiceResponse(T_RESP_CODE.DBERROR, "COULDNOT READ BOOKLIST");
+			}
 		} catch (Exception e) {
+			logger.error("Get book list failed.", e);
 			return new ServiceResponse(T_RESP_CODE.NOK, "COULDNOT READ BOOKLIST");
 		}
 		
@@ -136,14 +143,12 @@ public class LibraryManagerController {
 	 * @param newBook
 	 * @return
 	 */
-	@RequestMapping(value="/deleteBook", method=RequestMethod.POST)
+	@RequestMapping(value="/deleteBook/{id}", method=RequestMethod.GET)
 	public @ResponseBody ServiceResponse deleteBook(HttpServletRequest request,
-			@RequestBody String id) {
+			@PathVariable String id) {
 		logger.debug(String.format("requested deleteBook => %s", id));
 		
 		try {
-			// get the posted data
-			id = id.trim();
 			// send off db, if any
 			deleteTheBook(id);
 			
@@ -162,12 +167,15 @@ public class LibraryManagerController {
 	 * @param newBook
 	 * @return
 	 */
-	@RequestMapping(value="/updateBook", method=RequestMethod.POST)
+	@RequestMapping(value="/updateBook/{id}", method=RequestMethod.POST)
 	public @ResponseBody ServiceResponse updateBook(HttpServletRequest request,
+			@PathVariable String id,
 			@RequestBody Book updateReqBook) {
 		logger.debug(String.format("requested deleteBook => %s", updateReqBook));
 		
 		try {
+			updateReqBook.setId(id);
+			
 			// send to db
 			updateReqBook = updateTheBook(updateReqBook);
 			

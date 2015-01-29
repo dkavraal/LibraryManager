@@ -5,7 +5,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Library Manger</title>
-	<link href="<c:url value="/weblib/css/bootstrap.min.css" />"  rel="stylesheet" />
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="<c:url value="/weblib/css/ngDialog.min.css" />"  rel="stylesheet" />
 	<link href="<c:url value="/weblib/css/libman.css" />"  rel="stylesheet" />
 	<script type="text/javascript">var APPPATH="${pageContext.servletContext.contextPath}";</script>
 </head>
@@ -23,12 +24,12 @@
 			<form role="form" ng-submit="submitNewBook()" class="form-horizontal" id="newbook_form" name="newbook_form">
 				<div class="col-md-4">
 					<label for="newbook-title">Title</label>
-					<input type="text" class="form-control" id="newbook-title" placeholder="Title" ng-model="title" required />
+					<input type="text" class="form-control" id="newbook-title" placeholder="Title" maxlength="70" ng-model="title" required />
 				</div>
 				
 				<div class="col-md-3">
 					<label for="newbook-title">Author</label>
-					<input type="text" class="form-control" id="newbook-author" placeholder="Author" ng-model="author" required />
+					<input type="text" class="form-control" id="newbook-author" placeholder="Author" maxlength="30" ng-model="author" required />
 				</div>
 				
 				<div class="col-md-4">
@@ -66,16 +67,32 @@
 						<th></th>
 						<th></th>
 					</tr>
+					<tr class="info">
+						<th colspan="5" ng-show="loading"><center><i>Loading...</i></center></th>
+					</tr>
 				</thead>
-				<tbody ng-repeat="book in bookList">
-					<tr>
-						<td>{{book.id}}</td>
+				<tbody>
+					<tr ng-repeat="book in bookList">
+						<td class="verysmall">{{book.id}}</td>
 						<td>{{book.title}}</td>
 						<td>{{book.author}}</td>
-						<td>Upd</td>
-						<td>Del</td>
+						<td>
+							<a type="button" class="btn btn-primary" ng-click="openUpdDialog(book);">
+								<span><span class="glyphicon glyphicon-edit"></span> Edit</span>
+							</a>
+						</td>
+						<td>
+							<a type="button" class="btn btn-danger" ng-click="openDelDialog(book);">
+								<span><span class="glyphicon glyphicon-remove"></span> Del</span>
+							</a>
+						</td>
 					</tr>
 				</tbody>
+				<tfoot>
+					<tr class="danger" ng-show="loadError">
+						<th colspan="5"><center>There is something wrong at our system side. Can you please try again later? Thank you.</center></th>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>
@@ -90,10 +107,10 @@
 	</footer>
 
 	<script src="<c:url value="/weblib/js/angular.min.js"/>"></script>
-	<script src="<c:url value="/weblib/js/jquery.min.js"/>"></script>
-	<script src="<c:url value="/weblib/js/bootstrap.min.js"/>"></script>
+	<script src="<c:url value="/weblib/js/angular-sanitize.min.js"/>"></script>
+	<script src="<c:url value="/weblib/js/angular-animate.min.js"/>"></script>
 	<script src="<c:url value="/weblib/js/ui-bootstrap-tpls.js"/>"></script>
-	<script src="<c:url value="/weblib/js/dialogs.min.js"/>"></script>
+	<script src="<c:url value="/weblib/js/ngDialog.min.js"/>"></script>	
 	<script src="<c:url value="/weblib/js/libman.js"/>"></script>
 </body>
 </html>

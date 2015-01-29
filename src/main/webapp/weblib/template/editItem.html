@@ -1,0 +1,26 @@
+<div class="ngdialog-message">
+	<h4>Update?</h4>
+	<p>You can edit the data now,</p>
+
+		<div class="form-group form-group-lg">
+			<label class="col-sm-2 control-label" for="input-update-book-title">Title</label>
+			<div class="col-sm-10">
+				<input type="input" class="form-control" ng-model="updatebook.title" maxlength="70" id="input-update-book-title"/>
+			</div>
+			
+			<label class="col-sm-2 control-label" for="input-update-book-author">Author</label>
+			<div class="col-sm-10">
+				<input type="input" class="form-control" ng-model="updatebook.author" maxlength="50" id="input-update-book-author"/>
+			</div>
+		</div>
+		
+	<div class="progress" ng-show="updateProcess">
+		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+			<span>Please wait...</span>
+		</div>
+	</div>
+</div>
+<div class="ngdialog-buttons">
+	<button type="button" class="btn btn-default pull-right" ng-class="{'disabled': updateProcess}" ng-disabled="updateProcess" ng-click="cancel()">Cancel</button>
+	<button type="button" class="btn btn-info pull-left" ng-class="{'disabled': updateProcess}" ng-disabled="updateProcess" ng-click="ok(ngDialogData.book.id, updatebook.title, updatebook.author)">Update</button>
+</div>

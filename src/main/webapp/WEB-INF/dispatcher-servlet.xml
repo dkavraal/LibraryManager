@@ -17,6 +17,7 @@ http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 	<context:property-placeholder location="classpath:mongodb.properties"/>
 	
 	<mvc:resources mapping="/weblib/**" location="/weblib/" />
+	<!-- bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/-->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/views/"></property>
 		<property name="suffix" value=".jsp"></property>
