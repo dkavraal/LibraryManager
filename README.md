@@ -26,7 +26,7 @@ For a long time now, mockito is the best living thing/lib/imagination/idea I hav
 * MongoDB connection pooling is not investigated fully
 * MongoDB connection controller should be covering old and new libraries in a better understanding
 * ~~After inserting a new item, results should be refreshed. Despite using emit/broadcast, couldn't manage it to work~~
-* ~~Input masks should better be managed centrally with a possible solution out there.~~ Spring Validator will do it later.
+* ~~Input masks should better be managed centrally with a possible solution out there.~~ org.hibernate Validator will do it later.
 * Input masks should have a better UX to inform user before the "event" occurs rather while editing
 * ~~Rows should have step-color to make it easier to read~~ It was a fault using ng-repeat on TBODY not [tr]ROW
 * IDs of the items in the Book List view are not important; but couldn't have decided to remove or leave. Just left.
