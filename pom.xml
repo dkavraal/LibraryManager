@@ -15,7 +15,7 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.version>1.7</maven.compiler.version>
-		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
 
 		<log4j.version>1.2.17</log4j.version>
 		<junit.version>4.11</junit.version>
@@ -23,7 +23,7 @@
 		<jayway.jsonpath.version>0.9.0</jayway.jsonpath.version>
 		<hamcrest.version>1.3</hamcrest.version>
 
-		<java.servlet>3.1.0</java.servlet>
+		<java.servlet>2.5</java.servlet>
 		<org.apache.commons.version>3.3.2</org.apache.commons.version>
 		<apache-commons.version>3.2.1</apache-commons.version>
 		<hibernate.validator.version>5.1.3.Final</hibernate.validator.version>
@@ -35,7 +35,7 @@
 		<webapp.runner.version>7.0.40.1</webapp.runner.version>
 		<javax.el.version>2.2.5</javax.el.version>
 		<tomcat.el.version>7.0.55</tomcat.el.version>
-		
+
 		<REMEMBER.TO.CHECK.LOCAL.REPOS>1</REMEMBER.TO.CHECK.LOCAL.REPOS>
 	</properties>
 	<dependencies>
@@ -119,7 +119,7 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+			<artifactId>servlet-api</artifactId>
 			<version>${java.servlet}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -174,7 +174,7 @@
 			<artifactId>sp-captcha-filters</artifactId>
 			<version>2.0.235</version>
 		</dependency>
-		
+
 		<!-- validator -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -191,7 +191,7 @@
 			<artifactId>tomcat-embed-el</artifactId>
 			<version>${tomcat.el.version}</version>
 		</dependency>
-		
+				
 		<!-- build -->
 		<dependency>
             <groupId>com.github.jsimone</groupId>
@@ -203,7 +203,7 @@
 	<build>
 		<finalName>LibraryManager</finalName>
 		<plugins>
-			<!-- plugin>
+			<plugin>
 		      <groupId>org.apache.maven.plugins</groupId>
 		      <artifactId>maven-compiler-plugin</artifactId>
 		      <version>${maven.compiler.plugin.version}</version>
@@ -213,7 +213,7 @@
 		        <source>${maven.source.target}</source>
 		        <target>${maven.compiler.target}</target>
 		      </configuration>
-		    </plugin-->
+		    </plugin>
 		    
 		    <plugin>
 	            <groupId>org.apache.maven.plugins</groupId>
