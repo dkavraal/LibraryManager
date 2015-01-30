@@ -29,7 +29,7 @@
 				
 				<div class="col-md-3">
 					<label for="newbook-title">Author</label>
-					<input type="text" class="form-control" id="newbook-author" placeholder="Author" maxlength="30" ng-model="author" required />
+					<input type="text" class="form-control" id="newbook-author" placeholder="Author" maxlength="50" ng-model="author" required />
 				</div>
 				
 				<div class="col-md-4">

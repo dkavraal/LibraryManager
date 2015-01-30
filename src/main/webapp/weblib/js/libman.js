@@ -88,6 +88,7 @@ app.controller("modalUpdDialogCtrl", function ($scope, $rootScope, $http, ngDial
 		var dataToSend = {
 	          title:  $scope.updatebook.title,
 	          author: $scope.updatebook.author,
+	          verify: 'OK',
 	       };
 	
 		$http({
@@ -166,16 +167,20 @@ app.controller("LibManAdd", function($scope, $rootScope, $http) {
                 $scope.title = null;
                 $scope.author = null;
                 $scope.verify = null;
-                $scope.refreshCaptcha();
                 $scope.showSuccessMessage('Great. Done.');
             } else {
             	$scope.showDangerMessage('There has been a problem. CODE:' + data['RESP_CODE']);
             }
             $scope.$emit('reloadLibrary');
         }).error(function(data, status, headers, config) {
-        	$scope.showDangerMessage('There was a problem.');
+        	if (status == 400) {
+        		$scope.showDangerMessage('Please fill in the required fields.');
+			} else {
+				$scope.showDangerMessage('There was a problem.');
+			}
         })['finally'](function() {
         	$scope.loading = false;
+        	$scope.refreshCaptcha();
         });
 	};
 	

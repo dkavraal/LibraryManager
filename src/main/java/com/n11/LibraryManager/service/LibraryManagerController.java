@@ -1,11 +1,14 @@
 package com.n11.LibraryManager.service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -104,8 +107,13 @@ public class LibraryManagerController {
 	 */
 	@RequestMapping(value="/addNewBook", method=RequestMethod.POST)
 	public @ResponseBody ServiceResponse addNewBook(HttpServletRequest request,
-			@RequestBody RequestNewBook newBook) {
+			@RequestBody @Valid RequestNewBook newBook) {
 		logger.debug(String.format("requested addNewBook => %s", newBook));
+		
+		/*
+		if (bindingResult.hasErrors()) {
+			return new ServiceResponse(ServiceResponse.T_RESP_CODE.INVALID, bindingResult.getAllErrors());
+		}*/
 		
 		try {
 			// check captcha test
@@ -145,8 +153,12 @@ public class LibraryManagerController {
 	 */
 	@RequestMapping(value="/deleteBook/{id}", method=RequestMethod.GET)
 	public @ResponseBody ServiceResponse deleteBook(HttpServletRequest request,
-			@PathVariable String id) {
+			@PathVariable @Size(min=10, max=50) String id) {
 		logger.debug(String.format("requested deleteBook => %s", id));
+		
+		/*if (bindingResult.hasErrors()) {
+			return new ServiceResponse(ServiceResponse.T_RESP_CODE.INVALID, bindingResult.getAllErrors());
+		}*/
 		
 		try {
 			// send off db, if any
@@ -170,9 +182,13 @@ public class LibraryManagerController {
 	@RequestMapping(value="/updateBook/{id}", method=RequestMethod.POST)
 	public @ResponseBody ServiceResponse updateBook(HttpServletRequest request,
 			@PathVariable String id,
-			@RequestBody Book updateReqBook) {
+			@RequestBody @Valid Book updateReqBook) {
 		logger.debug(String.format("requested deleteBook => %s", updateReqBook));
 		
+		/*if (bindingResult.hasErrors()) {
+			return new ServiceResponse(ServiceResponse.T_RESP_CODE.INVALID, bindingResult.getAllErrors());
+		}*/
+			
 		try {
 			updateReqBook.setId(id);
 			

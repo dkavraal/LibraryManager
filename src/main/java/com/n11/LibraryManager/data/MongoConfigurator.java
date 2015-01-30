@@ -19,19 +19,21 @@ import com.mongodb.MongoURI;
 @Configuration
 public class MongoConfigurator {
 	protected static Logger logger = Logger.getLogger(MongoConfigurator.class.getName());
-	private static String mongoURI = System.getenv("MONGOLAB_URI");
-	private static MongoClientURI mongoClientURI = new MongoClientURI(mongoURI);
+	private static String mongoURI;
+	private static MongoClientURI mongoClientURI;
 	private static boolean isHerokuServer;
 	
 	public MongoConfigurator() {
-		isHerokuServer = !(mongoURI == null || mongoURI.equals(""));
-		/*
 		try {
-			dbName = mongoClientURI.getDatabase();
-			dbServerAddress = new ServerAddress(mongoClientURI.getHosts().get(0));
+			mongoURI = System.getenv("MONGOLAB_URI");
+			isHerokuServer = !(mongoURI == null || mongoURI.equals(""));
+			if (!isHerokuServer) {
+				mongoURI = "mongodb://localhost:27017/local";
+			}
+			mongoClientURI = new MongoClientURI(mongoURI);
 		} catch (Exception e) {
-			logger.error("DB Connection information corrupt. Check MONGOLAB_URI env var.", e);
-		}*/
+			logger.fatal("Serious problem connecting to DB. Check MONGOLAB_URI env var.", e);
+		}
 	}
 	
 	@Bean
@@ -68,20 +70,23 @@ public class MongoConfigurator {
 
 	public @Bean MongoDbFactory mongoDbFactory() {
 		if (isHerokuServer) {
-			MongoClientURI mongoClientURI = new MongoClientURI(mongoURI);
-			return new SimpleMongoDbFactory(mongo(), 
-											mongoClientURI.getDatabase(), 
-											new UserCredentials(mongoClientURI.getUsername(), mongoClientURI.getPassword().toString()));
+			try {
+				MongoClientURI mongoClientURI = new MongoClientURI(mongoURI);
+				return new SimpleMongoDbFactory(mongo(), 
+												mongoClientURI.getDatabase(), 
+												new UserCredentials(mongoClientURI.getUsername(), mongoClientURI.getPassword().toString()));
+			} catch (Exception e) {
+				logger.fatal("Mongo DB Factory failed", e);
+			}
 		}
 		
 		try {
-			return 
-					
-					new SimpleMongoDbFactory(mongo(), mongoClientURI.getDatabase());
+			return new SimpleMongoDbFactory(mongo(), mongoClientURI.getDatabase());
 		} catch (Exception e) {
 			logger.fatal("Mongo DB Factory failed", e);
 		}
 		
+		// really? db connection prop wasn't read; or some library problem with mongo / spring-mongo 
 		return null;
 	}
 
