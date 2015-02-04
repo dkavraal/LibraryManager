@@ -1,4 +1,4 @@
-LibraryManager (upd.3)
+LibraryManager (upd.4)
 ==============
 
 LibraryManager test project.
@@ -31,4 +31,5 @@ For a long time now, mockito is the best living thing/lib/imagination/idea I hav
 * **Done.** ~~Rows should have step-color to make it easier to read. It was a fault using ng-repeat on TBODY not [tr]ROW~~
 * IDs of the items in the Book List view are not important; but couldn't have decided to remove or leave. Just left.
 * Paging is a must. There should be an indicator to show how many books there are in the library and which page is shown
+* update fix. done.
 *  ...
