@@ -88,7 +88,6 @@ app.controller("modalUpdDialogCtrl", function ($scope, $rootScope, $http, ngDial
 		var dataToSend = {
 	          title:  $scope.updatebook.title,
 	          author: $scope.updatebook.author,
-	          verify: 'OK',
 	       };
 	
 		$http({

@@ -190,7 +190,9 @@ public class LibraryManagerController {
 		}*/
 			
 		try {
+			logger.info(String.format("requested deleteBook => %s", updateReqBook.toString()));
 			updateReqBook.setId(id);
+			logger.info(String.format("requested deleteBook => %s", updateReqBook.toString()));
 			
 			// send to db
 			updateReqBook = updateTheBook(updateReqBook);
@@ -276,7 +278,7 @@ public class LibraryManagerController {
 			BookList resultSet = new BookList(repository.findAll());
 			return resultSet;
 		} catch (Exception e) {
-			logger.error("Couldnot write book into DB", e);
+			logger.error("Couldnot get book list from DB", e);
 			return null;
 		}
 	}

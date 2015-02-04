@@ -33,8 +33,8 @@
 		<mongo.java.version>2.12.5</mongo.java.version>
 
 		<webapp.runner.version>7.0.40.1</webapp.runner.version>
-		<javax.el.version>2.2.5</javax.el.version>
-		<tomcat.el.version>7.0.55</tomcat.el.version>
+		<javax.el.version>3.0.0</javax.el.version>
+		<tomcat.el.version>7.0.57</tomcat.el.version>
 		
 		<REMEMBER.TO.CHECK.LOCAL.REPOS>1</REMEMBER.TO.CHECK.LOCAL.REPOS>
 	</properties>
@@ -203,7 +203,7 @@
 	<build>
 		<finalName>LibraryManager</finalName>
 		<plugins>
-			<!-- plugin>
+			<plugin>
 		      <groupId>org.apache.maven.plugins</groupId>
 		      <artifactId>maven-compiler-plugin</artifactId>
 		      <version>${maven.compiler.plugin.version}</version>
@@ -213,7 +213,7 @@
 		        <source>${maven.source.target}</source>
 		        <target>${maven.compiler.target}</target>
 		      </configuration>
-		    </plugin-->
+		    </plugin>
 		    
 		    <plugin>
 	            <groupId>org.apache.maven.plugins</groupId>
